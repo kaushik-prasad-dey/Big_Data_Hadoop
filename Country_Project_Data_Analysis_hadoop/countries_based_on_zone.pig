@@ -1,0 +1,4 @@
+country_data = LOAD '/user/kaushikdey72edu/Country_Flag_Data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+grouped_zone_data = GROUP country_data by landmass; 
+count_zone_data = FOREACH grouped_zone_data GENERATE group,COUNT(country_data);
+DUMP count_zone_data;

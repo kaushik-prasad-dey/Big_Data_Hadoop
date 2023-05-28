@@ -1,0 +1,98 @@
+Project Title : Country Project
+
+A. Count number of countries based on landmass
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+grouped_data = GROUP country_data by landmass; 
+count_data = FOREACH grouped_data GENERATE group,COUNT(country_data);
+DUMP count_data;
+
+B. Find out top 5 countries with sum of bars and strips in a flag
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray);
+foreach_data = FOREACH country_data GENERATE name,$7+$8;
+grouped_data = GROUP foreach_data All;
+bar_data = FOREACH grouped_data {        
+ord = ORDER foreach_data BY $1 DESC;    
+top = LIMIT ord 5;
+GENERATE FLATTEN(top);
+};
+DUMP bar_data;
+
+C. Count of countries with icon
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+filtered_icon_data = FILTER country_data BY icon == 1;    
+grouped_icon_data = GROUP filtered_icon_data BY icon; 
+count_icon_data = FOREACH grouped_icon_data GENERATE group, COUNT(filtered_icon_data);
+DUMP count_icon_data;
+
+D. Count of countries which have same top left and top right color in flag
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+filtered_flag_data = FILTER country_data BY $28 == $29;
+grouped_flag_data = GROUP filtered_flag_data All;
+count_flag_data = FOREACH grouped_flag_data GENERATE group, COUNT(filtered_flag_data);
+DUMP count_flag_data;
+
+E. Count number of countries based on zone
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+grouped_zone_data = GROUP country_data by landmass; 
+count_zone_data = FOREACH grouped_zone_data GENERATE group,COUNT(country_data);
+DUMP count_zone_data;
+
+F. Find out largest country in terms of area in NE zone
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:int, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+filtered_NE_data = FILTER country_data BY zone == 1;    
+grouped_NE_data = GROUP filtered_NE_data All; 
+max_area_data = FOREACH grouped_NE_data {
+ord = ORDER filtered_NE_data BY $3 DESC; 
+top = LIMIT ord 1;
+GENERATE FLATTEN(top);
+};
+max_area_country = FOREACH max_area_data GENERATE name,area;
+DUMP max_area_country; 
+
+G. Find out least populated country in S.America landmass
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:int, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+filtered_SA_data = FILTER country_data BY landmass == 2;    
+grouped_SA_data = GROUP filtered_SA_data All; 
+min_population_data = FOREACH grouped_SA_data {
+ord = ORDER filtered_SA_data BY $4 ASC; 
+top = LIMIT ord 1;
+GENERATE FLATTEN(top);
+};
+min_population_country = FOREACH min_population_data GENERATE name,population;
+DUMP min_population_country;
+
+H. Find out largest speaking language among all countries
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray);
+foreach_data = FOREACH country_data GENERATE name,lang;
+grouped_data = GROUP foreach_data BY lang;
+count_data = FOREACH grouped_data GENERATE group,(int)COUNT(foreach_data); 
+grouped_count_data = GROUP count_data All;
+max_lang_data = FOREACH grouped_count_data {          
+ord = ORDER count_data BY $1 DESC;    
+top = LIMIT ord 1;
+GENERATE FLATTEN(top);
+};
+DUMP max_lang_data;
+
+I. Find most common color among flags from all countries
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:chararray, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray);
+grouped_data = GROUP country_data All;
+final_color_data = FOREACH grouped_data GENERATE group,SUM(country_data.$10),SUM(country_data.$11),SUM(country_data.$12),SUM(country_data.$13),SUM(country_data.$14),SUM(country_data.$15),SUM(country_data.$16);
+dump final_color_data;
+
+J. Sum of all circles present in all country flags.
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:chararray, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+grouped_circle_data = GROUP country_data All; 
+sum_circle = FOREACH grouped_circle_data GENERATE group,SUM(country_data.circle);
+dump sum_circle;  
+
+K. Count of countries which have both icon and text in flag
+country_data = LOAD '/user/edureka/country_project/country_data.txt' USING PigStorage(',') as (name:chararray, landmass:int, zone:int, area:chararray, population:chararray, lang:int, rel:int, bar:int, stripes:int, col:int, red:int, green:int, blue:int, gold:int, white:int, black:int, orange:int, hue:chararray, circle:int, cross:int, saltire:int, quars:int, suns:int, cres:int, triangle:int, icon:int, animate:int, text:int, left:chararray, right:chararray); 
+filtered_country_data = FILTER country_data BY ($25 == 1) AND ($29 == 1);
+grouped_text_data = GROUP filtered_country_data All;
+count_text_data = FOREACH grouped_text_data GENERATE group, COUNT(filtered_country_data);
+DUMP count_text_data; 
+https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.74/bin/apache-tomcat-9.0.74.tar.gz
+tar -xvzf /opt/apache-tomcat-9.0.74.tar.gz
+chmod +x /opt/apache-tomcat-9.0.74/bin/shutdown.sh
+bash /opt/apache-tomcat-9.0.74/bin/startup.sh
